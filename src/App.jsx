@@ -10,12 +10,11 @@ export default function App() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState('');
   const [videoData, setVideoData] = useState(null);
-  const [activeTab, setActiveTab] = useState('video'); // 'video' or 'audio'
+  const [activeTab, setActiveTab] = useState('video');
   const [downloadingId, setDownloadingId] = useState(null);
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [history, setHistory] = useState([]);
 
-  // Load history from local storage on mount
   useEffect(() => {
     const savedHistory = localStorage.getItem('yt_history');
     if (savedHistory) {
@@ -47,7 +46,6 @@ export default function App() {
     setVideoData(null);
 
     try {
-      // Fetch real video metadata using noembed (CORS friendly proxy for oEmbed)
       const response = await fetch(`https://noembed.com/embed?url=${encodeURIComponent(url)}`);
       const data = await response.json();
 
@@ -74,7 +72,6 @@ export default function App() {
 
       setVideoData(fetchedData);
       
-      // Add to history
       const newHistory = [fetchedData, ...history.filter(h => h.id !== fetchedData.id)].slice(0, 4);
       setHistory(newHistory);
       localStorage.setItem('yt_history', JSON.stringify(newHistory));
@@ -90,12 +87,11 @@ export default function App() {
     setDownloadingId(formatId);
     setDownloadProgress(0);
 
-    // Simulate download progress
     const interval = setInterval(() => {
       setDownloadProgress(prev => {
         if (prev >= 100) {
           clearInterval(interval);
-          setTimeout(() => setDownloadingId(null), 1000); // Clear after 1s
+          setTimeout(() => setDownloadingId(null), 1000);
           return 100;
         }
         return prev + Math.floor(Math.random() * 15) + 5;
@@ -105,12 +101,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#05050A] text-slate-200 font-sans selection:bg-pink-500/30 overflow-x-hidden relative">
-      
-      {/* 2026 Modern Liquid/Blur Backgrounds */}
       <div className="fixed top-[-20%] left-[-10%] w-[50vw] h-[50vw] bg-indigo-700/20 rounded-full mix-blend-screen filter blur-[140px] opacity-70 pointer-events-none animate-pulse duration-1000"></div>
       <div className="fixed bottom-[-20%] right-[-10%] w-[50vw] h-[50vw] bg-pink-700/10 rounded-full mix-blend-screen filter blur-[140px] opacity-70 pointer-events-none"></div>
 
-      {/* Navigation */}
       <nav className="relative z-10 border-b border-white/5 bg-black/20 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -131,10 +124,7 @@ export default function App() {
         </div>
       </nav>
 
-      {/* Main Content */}
       <main className="relative z-10 max-w-4xl mx-auto px-6 pt-20 pb-32">
-        
-        {/* Hero Section */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm font-medium mb-6">
             <span className="relative flex h-2 w-2">
@@ -155,7 +145,6 @@ export default function App() {
           </p>
         </div>
 
-        {/* Input Card */}
         <div className="bg-white/[0.03] backdrop-blur-2xl border border-white/10 rounded-3xl p-3 shadow-2xl mb-12">
           <form onSubmit={handleAnalyze} className="relative flex flex-col sm:flex-row gap-3">
             <div className="relative flex-grow flex items-center">
@@ -195,13 +184,10 @@ export default function App() {
           )}
         </div>
 
-        {/* Result Area */}
         {videoData && (
           <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out">
             <div className="bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
-              
               <div className="flex flex-col md:flex-row">
-                {/* Video Info Left Side */}
                 <div className="w-full md:w-2/5 p-6 md:border-r border-white/10 bg-black/20">
                   <div className="relative rounded-2xl overflow-hidden aspect-video mb-4 group cursor-pointer">
                     <img src={videoData.thumbnail} alt={videoData.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
@@ -221,10 +207,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Download Options Right Side */}
                 <div className="w-full md:w-3/5 p-6">
-                  
-                  {/* Custom Segmented Control */}
                   <div className="flex p-1 bg-black/30 rounded-xl mb-6">
                     <button 
                       onClick={() => setActiveTab('video')}
@@ -240,11 +223,9 @@ export default function App() {
                     </button>
                   </div>
 
-                  {/* Format List */}
                   <div className="space-y-3">
                     {videoData.formats[activeTab].map((format) => (
                       <div key={format.id} className="group relative overflow-hidden flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 hover:bg-white/[0.07] transition-all">
-                        {/* Progress Bar Background (if downloading) */}
                         {downloadingId === format.id && (
                            <div 
                               className="absolute left-0 top-0 bottom-0 bg-indigo-500/20 transition-all duration-300"
@@ -283,7 +264,6 @@ export default function App() {
           </div>
         )}
 
-        {/* History Section */}
         {history.length > 0 && !videoData && (
           <div className="mt-16 animate-in fade-in duration-1000">
             <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">

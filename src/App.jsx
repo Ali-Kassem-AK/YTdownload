@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Download, Link2, Youtube, Music, Film, 
+  Download, Link2, Tv, Music, Film, 
   CheckCircle2, AlertCircle, Clock, ChevronRight, 
   Loader2, Play, HardDriveDownload
 } from 'lucide-react';
@@ -202,7 +202,7 @@ export default function App() {
                   </div>
                   <h3 className="text-xl font-bold text-white line-clamp-2 leading-snug mb-2">{videoData.title}</h3>
                   <div className="flex items-center justify-between text-sm text-slate-400">
-                    <span className="flex items-center gap-1.5"><Youtube size={16} className="text-pink-500"/> {videoData.channel}</span>
+                    <span className="flex items-center gap-1.5"><Tv size={16} className="text-pink-500"/> {videoData.channel}</span>
                     <span>{videoData.views} views</span>
                   </div>
                 </div>
